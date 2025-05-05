@@ -1,0 +1,19 @@
+import mongoose from "mongoose";
+
+const userSchema = mongoose.Schema({
+    email:{type:String,required:true,unique:true,index:true,validate: {
+        validator: function (v) {
+          return /^[\w.%+-]+@dumadu\.com$/.test(v);
+        },
+        message: props => `${props.value} is not a valid email!, Only Company Mail is required`
+      }},
+    name:{type:String,required:true},
+    password:{type:String,required:true},
+    dob:{type:Date,required:true},
+    gender:{type:String,enum:['Male','Female','Others'],required:true},
+    loginTimeCurrenDay:[],
+    logoutTimeCurrenDay:[],
+    previousTimeHour:[],
+    projects:[],
+    role:{type:String,enum:['Admin','Employee'],default:'Employee'}
+})
