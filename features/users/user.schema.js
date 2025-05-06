@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema({
+export const userSchema = mongoose.Schema({
     email:{type:String,required:true,unique:true,index:true,validate: {
         validator: function (v) {
           return /^[\w.%+-]+@dumadu\.com$/.test(v);
@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
       }},
     name:{type:String,required:true},
     password:{type:String,required:true},
-    dob:{type:Date,required:true},
+    dob:{type:Date,default:Date.now()},
     gender:{type:String,enum:['Male','Female','Others'],required:true},
     loginTimeCurrenDay:[],
     logoutTimeCurrenDay:[],
