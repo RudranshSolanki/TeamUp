@@ -69,6 +69,37 @@ export class UserController{
         }
         await user.save();
     }
+    async logoutTime(user){
+        let sameLogoutDate = false;
+        if(user.logoutDay == null)
+            sameLogoutDate = false;
+        else{
+            let sameDate = this.sameDate(user.logoutDay,new Date(Date.now()));
+            if(sameDate)
+                sameLogoutDate = true;
+        }
+        user.logoutDay = Date.now();
+        //now store whole object of login time and logout time with total working hour in user schema 
+        let loginDate = new Date(user.loginDay).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        let logoutDate = new Date(user.logoutDay).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        let loginTime  = user.loginDay;
+        let logoutTime  = user.logoutDay;
+        let totalTimeInDay = logoutTime - loginTime;
+        let totalHours = totalTimeInDay/(1000*60*60);
+        const hours = Math.floor(totalHours);
+
+        //fractionalMinutes
+        const remainingMinutes = (totalHours-hours)*60;
+        const minute = Math.round(remainingMinutes);
+        if(sameLogoutDate)
+            user.previousTimeHour.pop();
+        user.previousTimeHour.push({
+            loginDate:loginDate,
+            logoutDate:logoutDate,
+            Total_Woking_Hours: [hours,minute],
+        })
+        await user.save();
+    }
 
     async sameDate(day1,day2){
         let date1 = day1.toISOString().split('T')[0];
@@ -80,9 +111,17 @@ export class UserController{
     async getUserDetails(req,res){
         try{
             //simple fetching data from db
+            const email = req.userEmail;
+            const user = await this.userRepo.findUser(email);
+            if(user)
+            {
+                return res.status(200).send({message:user});
+            }
+            else
+                throw new Error('Did not find user');
         }
         catch(err){
-
+            return res.stats(400).send(err);
         }
     }
 
@@ -108,37 +147,7 @@ export class UserController{
         }
     }
 
-    async logoutTime(user){
-        user.logoutDay = Date.now();
-        let sameLogoutDate = false;
-
-        if(user.previousTimeHour.length>=1)
-        {
-            let sameDate = this.sameDate(user.previousTimeHour[user.previousTimeHour.length-1].logoutDate,new Date(Date.now()));
-            if(sameDate)
-                sameLogoutDate = true;
-        }
-        //now store whole object of login time and logout time with total working hour in user schema 
-        let loginDate = new Date(user.loginDay).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-        let logoutDate = new Date(user.logoutDay).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-        let loginTime  = user.loginDay;
-        let logoutTime  = user.logoutDay;
-        let totalTimeInDay = logoutTime - loginTime;
-        let totalHours = totalTimeInDay/(1000*60*60);
-        const hours = Math.floor(totalHours);
-
-        //fractionalMinutes
-        const remainingMinutes = (totalHours-hours)*60;
-        const minute = Math.round(remainingMinutes);
-        if(sameLogoutDate)
-            user.previousTimeHour.pop();
-        user.previousTimeHour.push({
-            loginDate:loginDate,
-            logoutDate:logoutDate,
-            Total_Woking_Hours: [hours,minute],
-        })
-        await user.save();
-    }
+    
 
     async previousDayWorkHour(req,res){
         try{
