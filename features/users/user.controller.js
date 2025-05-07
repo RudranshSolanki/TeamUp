@@ -60,16 +60,22 @@ export class UserController{
             
         }
         else{
-            let loginDate = new Date(user.loginDay).toISOString().split('T')[0];
-
-            let currentDate = new Date().toISOString().split('T')[0];
-            if(loginDate != currentDate){
+            let sameDate = this.sameDate(new Date(user.loginDay),new Date());
+            if(!sameDate){
                 user.loginDay = Date.now();
                 
             }
             
         }
         await user.save();
+    }
+
+    async sameDate(day1,day2){
+        let date1 = day1.toISOString().split('T')[0];
+        let date2 = day2.toISOString().split('T')[0];
+        if(date1 == date2)
+            return true;
+        return false;
     }
     async getUserDetails(req,res){
         try{
@@ -108,14 +114,13 @@ export class UserController{
 
         if(user.previousTimeHour.length>=1)
         {
-            let oldDate = user.previousTimeHour[user.previousTimeHour.length-1].logoutDate.toISOString().split('T')[0];
-            let newDate = new Date(Date.now()).toISOString().split('T')[0];
-            if(oldDate == newDate)
+            let sameDate = this.sameDate(user.previousTimeHour[user.previousTimeHour.length-1].logoutDate,new Date(Date.now()));
+            if(sameDate)
                 sameLogoutDate = true;
         }
         //now store whole object of login time and logout time with total working hour in user schema 
-        let loginDate = new Date(user.loginDay);
-        let logoutDate = new Date(user.logoutDay);
+        let loginDate = new Date(user.loginDay).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        let logoutDate = new Date(user.logoutDay).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
         let loginTime  = user.loginDay;
         let logoutTime  = user.logoutDay;
         let totalTimeInDay = logoutTime - loginTime;
