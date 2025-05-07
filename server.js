@@ -3,10 +3,14 @@ dotenv.config();
 import express from 'express'
 import { ConnectToDb } from './config/db.config.js';
 import userRoute from './features/users/user.route.js';
+import cookieParser from 'cookie-parser';
 
 const server = express();
 
 const Port =  process.env.PORT
+
+//cookie parser
+server.use(cookieParser())
 //parsing to json
 server.use(express.json());
 

@@ -11,8 +11,8 @@ export const userSchema = mongoose.Schema({
     password:{type:String,required:true},
     dob:{type:Date,default:Date.now()},
     gender:{type:String,enum:['Male','Female','Others'],required:true},
-    loginTimeCurrenDay:[],
-    logoutTimeCurrenDay:[],
+    loginDay:{type:Date,default:null},
+    logoutDay:{type:Date,default:null},
     previousTimeHour:[],
     projects:[],
     role:{type:String,enum:['Admin','Employee'],default:'Employee'}
