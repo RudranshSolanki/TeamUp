@@ -43,8 +43,24 @@ export class UserRepo{
     }
 
     // get work hours for previous days
-    async previousDayWorkHour(){
+    async previousDayWorkHour(email){
+        try{
+            const userWorkingHours = await userModel.aggregate([
+                {
+                    $match:{email:email}
+                },
+                {
+                    $project:{
+                        _id:0,
+                        previousTimeHour:{$slice:["$previousTimeHour",-5]}
+                    }
+                }
+            ]);
+            return userWorkingHours
+        }
+        catch{
 
+        }
     }
 
     //get user project

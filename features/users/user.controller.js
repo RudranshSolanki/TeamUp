@@ -61,7 +61,6 @@ export class UserController{
         }
         else{
             let sameDate = await this.sameDate(user.loginDay,new Date());
-            console.log('same login date ' + sameDate);
             if(!sameDate){
                 user.loginDay = Date.now();
                 
@@ -153,9 +152,12 @@ export class UserController{
     async previousDayWorkHour(req,res){
         try{
             // get array of previousTimeHour in db
+            const userEmail = req.userEmail;
+            const userHours = await this.userRepo.previousDayWorkHour(userEmail);
+            res.status(200).send(userHours);
         }
         catch(err){
-
+            res.stats(400).send({err:err})
         }
     }
 

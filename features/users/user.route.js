@@ -27,5 +27,9 @@ userRoute.get('/getuserdetail',jwtAuth,(req,res,next)=>{
     userController.getUserDetails(req,res,next);
 })
 
+// get user previous working hour
+userRoute.get('/getuserpreviousworkhours',jwtAuth,(req,res,next)=>{
+    userController.previousDayWorkHour(req,res,next);
+})
 
 export default userRoute;
