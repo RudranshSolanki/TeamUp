@@ -60,7 +60,8 @@ export class UserController{
             
         }
         else{
-            let sameDate = this.sameDate(new Date(user.loginDay),new Date());
+            let sameDate = await this.sameDate(user.loginDay,new Date());
+            console.log('same login date ' + sameDate);
             if(!sameDate){
                 user.loginDay = Date.now();
                 
@@ -74,7 +75,7 @@ export class UserController{
         if(user.logoutDay == null)
             sameLogoutDate = false;
         else{
-            let sameDate = this.sameDate(user.logoutDay,new Date(Date.now()));
+            let sameDate = await this.sameDate(user.logoutDay,new Date(Date.now()));
             if(sameDate)
                 sameLogoutDate = true;
         }
