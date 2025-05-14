@@ -64,8 +64,14 @@ export class UserRepo{
     }
 
     //get user project
-    async getUserProject(){
-
+    async getUserProject(userEmail){
+        try{
+            const projects = await userModel.findOne({email:userEmail},{projects:1,_id:0})
+            return projects;
+        }
+        catch(err){
+            throw new Error(err);
+        }
     }
 
     //delete accout manage by admin and current user

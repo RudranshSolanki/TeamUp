@@ -32,4 +32,9 @@ userRoute.get('/getuserpreviousworkhours',jwtAuth,(req,res,next)=>{
     userController.previousDayWorkHour(req,res,next);
 })
 
+// get user project
+userRoute.get('/getuserproject',jwtAuth,(req,res,next)=>{
+    userController.getUserProject(req,res,next)
+})
+
 export default userRoute;

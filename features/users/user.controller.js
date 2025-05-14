@@ -164,12 +164,18 @@ export class UserController{
     async getUserProject(req,res){
         try{
             //get user project form projects array in db 
+            const userEmail = req.userEmail;
+            const userProjects = await this.userRepo.getUserProject(userEmail);
+            res.status(200).send(userProjects);
         }
         catch(err){
-
+            res.status(400).send(err)
         }
     }
 
+
+
+    // admin features and operational features
     async deleteAccout(req,res){
         try{
             //admin can deleteAccount
