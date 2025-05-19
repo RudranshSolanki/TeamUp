@@ -14,6 +14,6 @@ export const userSchema = mongoose.Schema({
     loginDay:{type:Date,default:null},
     logoutDay:{type:Date,default:null},
     previousTimeHour:[],
-    projects:[],
+    projects:[{type:mongoose.Schema.Types.ObjectId,ref:'project'}],
     role:{type:String,enum:['Admin','Employee'],default:'Employee'}
 })

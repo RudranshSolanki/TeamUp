@@ -16,6 +16,8 @@ export class UserController{
             const hashPassword = await bcrypt.hash(password,12);
             // send data to repository to add register the user
             let result = await this.userRepo.registerUser({name,email,password:hashPassword,gender}); //here repo function will be present 
+            
+            //email verification
             if(!(result instanceof Error))
                 res.status(201).send('User added success');
             else{
@@ -35,6 +37,8 @@ export class UserController{
             if(!user)
                 throw new Error('User does not exist');
             //check user and password here 
+
+            
             const result = await this.userRepo.logingUser(email,password);
             if(!result)
                 throw new Error('Password does not match');
